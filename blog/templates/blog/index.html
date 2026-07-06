@@ -1,6 +1,19 @@
-<hi>Fkay Blog</hi>
-<ul>
-    {% for blog in posts %}
-        <li>{{ blog.title }} ({{ blog.author}})</li>
+{% extends 'blog/base.html' %}
+
+{% block content %}
+    <div class="row">
+        {% for blog in posts %}
+        <div class="col">
+            <div class="card" style="width: 18rem;">
+                <img src="{{ blog.image_url.url }}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">{{ blog.title }}</h5>
+                    <p class="card-text">{{ blog.author }}</p>
+                    <a href="#" class="btn btn-primary">Enjoy</a>
+                </div>
+            </div>
+        </div>
     {% endfor %}
-</ul>
+    </div>
+
+{% endblock %}
