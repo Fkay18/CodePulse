@@ -1,11 +1,17 @@
 {% extends 'blog/base.html' %}
 
 {% block content %}
+<a href="{% url 'index' %}" class="btn btn-outline-primary mb-4">
+    ← Back to Blog
+</a>
 <div class="container mt-5">
     <div class="card shadow">
-        <img src="{{ post.image_url.url }}" class="card-img-top" alt="{{ post.title }}">
         <div class="card-body">
-            <h5 class="card-title">{{ post.title }}</h5>
+            <h1 class="card-title mb-3">{{ post.title }}</h1>
+            <p class="text-muted">
+                By Fikayomi • July 2026
+            </p>
+            <img src="{{ post.image_url.url }}" class="card-img-top" alt="{{ post.title }}">
             <p class="card-text">{{ post.content }}</p>
         </div>
     </div>

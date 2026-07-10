@@ -1,6 +1,13 @@
 {% extends 'blog/base.html' %}
 
 {% block content %}
+<div class="text-center py-5">
+    <h1 class="display-4 fw-bold">Coding with Fkay</h1>
+    <p class="lead text-muted">
+        Learning Django, Python, Git, and backend engineering—one project at a time.
+    </p>
+</div>
+<h2 class="mb-4">Latest Articles</h2>
     <div class="row">
         {% for blog in posts %}
         <div class="col">
