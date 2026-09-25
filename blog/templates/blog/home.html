@@ -1,0 +1,133 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+<section class="home-hero">
+    <div class="container">
+        <p class="section-label">Welcome to CodePulse</p>
+        <h1>Coding with Fkay</h1>
+        <p class="home-hero__lead">
+            A developer’s journey through code, systems, and problem-solving.
+        </p>
+    </div>
+</section>
+<h2 class="latest-articles-heading mb-4" id="articles">Latest Articles</h2>
+    <div class="row">
+        {% for blog in posts %}
+        <div class="col">
+            <div class="card article-card h-100">
+                <img src="{{ blog.image_url.url }}" class="card-img-top" alt="{{ blog.title }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ blog.title }}</h5>
+                    <p class="card-author">{{ blog.author }}</p>
+                    <a href="{% url 'detail' blog.id %}" class="btn btn-primary article-btn">Enjoy</a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+
+
+<section class="home-features">
+    <div class="container">
+
+        <div class="section-heading">
+            <span class="section-label">Why CodePulse</span>
+
+            <h2>
+                Learn the thinking behind the code.
+            </h2>
+
+            <p>
+                CodePulse is about understanding how software works,
+                building practical projects, and becoming a better developer
+                one concept at a time.
+            </p>
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-md-6 col-lg-4">
+                <article class="feature-card">
+
+                    <div class="feature-icon">🧠</div>
+
+                    <h3>Practical Learning</h3>
+
+                    <p>
+                        Clear explanations, practical examples, and lessons
+                        focused on concepts you can actually use when building
+                        software.
+                    </p>
+                </article>
+            </div>
+
+
+            <div class="col-md-6 col-lg-4">
+                <article class="feature-card">
+
+                    <div class="feature-icon">⚙️</div>
+
+                    <h3>Understand Systems</h3>
+
+                    <p>
+                        Go beyond writing code and understand databases,
+                        APIs, architecture, workflows, and how different
+                        parts of an application work together.
+                    </p>
+                </article>
+            </div>
+
+
+            <div class="col-md-6 col-lg-4">
+                <article class="feature-card">
+
+                    <div class="feature-icon">🚀</div>
+
+                    <h3>Build Real Things</h3>
+
+                    <p>
+                        Turn ideas into working applications, experiment
+                        with new technologies, and learn through the process
+                        of building.
+                    </p>
+                </article>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<section class="home-cta">
+    <div class="container">
+
+        <div class="cta-panel">
+
+            <div class="cta-copy">
+                <span class="section-label">Explore CodePulse</span>
+
+                <h2>
+                    There's always something new to learn.
+                </h2>
+
+                <p>
+                    Explore articles covering Python, Django, APIs,
+                    databases, backend development, and more.
+                </p>
+            </div>
+
+            <div class="cta-actions">
+                <a href="{% url 'articles' %}" class="btn btn-primary btn-lg">
+                    Explore Articles
+                </a>
+
+                <a href="{% url 'about' %}" class="btn btn-outline-primary btn-lg">
+                    About CodePulse
+                </a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}

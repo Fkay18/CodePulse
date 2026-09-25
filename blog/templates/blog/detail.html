@@ -1,18 +1,29 @@
 {% extends 'blog/base.html' %}
 
 {% block content %}
-<a href="{% url 'index' %}" class="btn btn-outline-primary mb-4">
-    ← Back to Blog
-</a>
-<div class="container mt-5">
-    <div class="card shadow">
-        <div class="card-body">
-            <h1 class="card-title mb-3">{{ post.title }}</h1>
-            <p class="text-muted">
-                By Fikayomi • July 2026
-            </p>
-            <img src="{{ post.image_url.url }}" class="card-img-top" alt="{{ post.title }}">
-            <p class="card-text">{{ post.content }}</p>
-        </div>
+<section class="article-detail">
+    <div class="container">
+        {% if post.unit %}
+            <a href="{% url 'unit_articles' post.unit.slug %}" class="article-detail__back">← Back to {{ post.unit.name }}</a>
+        {% else %}
+            <a href="{% url 'articles' %}" class="article-detail__back">← Back to articles</a>
+        {% endif %}
+
+        <article class="article-detail__card">
+            <p class="section-label article-detail__label">CodePulse article</p>
+            <h1>{{ post.title }}</h1>
+            <div class="article-detail__meta">
+                <span>By {{ post.author }}</span>
+                <span>•</span>
+                <span>{{ post.created_at|date:'F j, Y' }}</span>
+            </div>
+
+            <img src="{{ post.image_url.url }}" alt="{{ post.title }}">
+
+            <div class="article-detail__content">
+                {{ post.content|linebreaks }}
+            </div>
+        </article>
     </div>
-    {% endblock %}
+</section>
+{% endblock %}

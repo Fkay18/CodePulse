@@ -1,0 +1,41 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+<section class="articles-hero articles-hero--nested">
+    <div class="container">
+        <a class="btn btn-outline-primary mb-4" href="{% url 'articles' %}">← All units</a>
+        <p class="section-label">Article unit</p>
+        <h1>{{ unit.name }}</h1>
+        <p class="lead">
+            {% if posts %}
+                {{ posts.count }} article{{ posts.count|pluralize }} in this collection.
+            {% else %}
+                This unit is waiting for its first article.
+            {% endif %}
+        </p>
+    </div>
+</section>
+
+<section class="articles-page">
+    <div class="container">
+        <div class="row g-4">
+            {% for blog in posts %}
+            <div class="col-md-6 col-lg-4">
+                <article class="article-card h-100">
+                    <img src="{{ blog.image_url.url }}" class="card-img-top" alt="{{ blog.title }}">
+                    <div class="card-body">
+                        <p class="card-meta">{{ blog.author }}</p>
+                        <h2 class="card-title">{{ blog.title }}</h2>
+                        <a href="{% url 'detail' blog.id %}" class="btn btn-primary article-btn">Read article</a>
+                    </div>
+                </article>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <p class="empty-state">No articles have been assigned to this unit yet.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

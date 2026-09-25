@@ -1,0 +1,36 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+<section class="articles-hero">
+	<div class="container">
+		<p class="section-label">Browse CodePulse</p>
+		<h1>Articles by unit</h1>
+		<p class="lead">
+			Explore practical writing on software, systems, design thinking, and everyday engineering lessons.
+		</p>
+	</div>
+</section>
+
+<section class="articles-page" aria-labelledby="unit-list-heading">
+	<div class="container">
+		<h2 id="unit-list-heading" class="visually-hidden">Article units</h2>
+		<div class="row g-4">
+			{% for unit in units %}
+			<div class="col-sm-6 col-lg-4">
+				<a class="unit-card" href="{% url 'unit_articles' unit.slug %}">
+					<span class="unit-card__name">{{ unit.name }}</span>
+					<span class="unit-card__count">
+						{{ unit.article_count }} article{{ unit.article_count|pluralize }}
+					</span>
+					<span class="unit-card__arrow" aria-hidden="true">→</span>
+				</a>
+			</div>
+			{% empty %}
+			<div class="col-12">
+				<p class="empty-state">No article units have been created yet.</p>
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+</section>
+{% endblock %}

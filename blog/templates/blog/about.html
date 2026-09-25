@@ -1,0 +1,109 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+<section class="about-page about-hero">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <p class="about-kicker">About CodePulse</p>
+                <h1 class="about-hero__title">Learning in public, one article at a time.</h1>
+                <p class="about-hero__lead">
+                    CodePulse is a place for practical lessons on Python, Django, backend systems,
+                    and the kind of problem-solving that makes software development feel real.
+                </p>
+                <p class="about-hero__text">
+                    It is built around the idea that great engineering usually starts with curiosity,
+                    careful thinking, and a willingness to learn out loud. This blog captures that
+                    process: the experiments, the breakdowns, the fixes, and the wins.
+                </p>
+                <div class="about-hero__actions">
+                    <a class="btn btn-primary" href="{% url 'home' %}#articles">Read the articles</a>
+                    <a class="btn btn-outline-primary" href="{% url 'contact' %}">Get in touch</a>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="about-spotlight">
+                    <p class="about-spotlight__label">What you’ll find here</p>
+                    <ul class="about-spotlight__list">
+                        <li>Python and Django notes</li>
+                        <li>Backend architecture ideas</li>
+                        <li>Real-world debugging lessons</li>
+                        <li>Systems thinking and iteration</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="about-story">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <p class="about-kicker">Why it exists</p>
+                <h2 class="about-section__title">Built for curiosity, clarity, and better systems.</h2>
+            </div>
+
+            <div class="col-lg-6">
+                <p class="about-story__text">
+                    CodePulse exists to make software learning feel useful instead of theoretical.
+                    The focus is on small, repeatable lessons: understanding how things work,
+                    improving the process, and applying knowledge in real projects.
+                </p>
+                <p class="about-story__text">
+                    Whether it is an API design decision, a database issue, or a Django pattern,
+                    each article is meant to help the reader build with more confidence.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="about-values">
+    <div class="container">
+        <div class="text-center mb-5">
+            <p class="about-kicker">Principles</p>
+            <h2 class="about-section__title">The ideas behind the work.</h2>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <article class="value-card h-100">
+                    <div class="value-card__icon">🧠</div>
+                    <h3>Learn deeply</h3>
+                    <p>Understand the reasoning behind the code, not just the syntax.</p>
+                </article>
+            </div>
+
+            <div class="col-md-4">
+                <article class="value-card h-100">
+                    <div class="value-card__icon">⚙️</div>
+                    <h3>Build clearly</h3>
+                    <p>Focus on systems, structure, and maintainable decisions that scale.</p>
+                </article>
+            </div>
+
+            <div class="col-md-4">
+                <article class="value-card h-100">
+                    <div class="value-card__icon">🚀</div>
+                    <h3>Ship with confidence</h3>
+                    <p>Turn learning into action and use practical thinking to improve delivery.</p>
+                </article>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="about-cta">
+    <div class="container">
+        <div class="about-cta__panel">
+            <div>
+                <p class="about-kicker about-kicker--light">Keep exploring</p>
+                <h2>Read the latest work from CodePulse.</h2>
+            </div>
+            <a href="{% url 'home' %}#articles" class="btn btn-primary">Explore articles</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

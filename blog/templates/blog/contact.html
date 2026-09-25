@@ -1,0 +1,101 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+<section class="contact-page contact-hero">
+    <div class="container">
+        <div class="text-center">
+            <p class="contact-kicker">Contact CodePulse</p>
+            <h1 class="contact-hero__title">Let’s talk about building better software.</h1>
+            <p class="contact-hero__text">
+                Have a question, a collaboration idea, or just want to say hello? Reach out and
+                I’ll be happy to connect.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="contact-details">
+    <div class="container">
+        <div class="row g-5 align-items-start">
+            <div class="col-lg-5">
+                <div class="contact-info">
+                    <h2 class="contact-section__title">Get in touch</h2>
+                    <p class="contact-info__text">
+                        Whether you are interested in a project, a discussion about code, or just want
+                        to connect, the simplest way is through phone or LinkedIn.
+                    </p>
+
+                    <div class="contact-item">
+                        <div class="contact-item__icon">📞</div>
+                        <div>
+                            <h5>Phone</h5>
+                            <p><a href="tel:08142582903">08142582903</a></p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-item__icon">💼</div>
+                        <div>
+                            <h5>LinkedIn</h5>
+                            <p>
+                                <a href="https://www.linkedin.com/in/fikayomi-akinrimisi" target="_blank" rel="noopener noreferrer">
+                                    fikayomi-akinrimisi
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-item__icon">📍</div>
+                        <div>
+                            <h5>Based in</h5>
+                            <p>Lagos, Nigeria</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-7">
+                <div class="contact-form-card">
+                    <h3>Send a message</h3>
+                    <form>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="contact-name" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="contact-name" placeholder="Your full name">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="contact-email" class="form-label">Email Address</label>
+                                <input type="email" class="form-control" id="contact-email" placeholder="you@example.com">
+                            </div>
+                            <div class="col-12">
+                                <label for="contact-subject" class="form-label">Subject</label>
+                                <input type="text" class="form-control" id="contact-subject" placeholder="What would you like to discuss?">
+                            </div>
+                            <div class="col-12">
+                                <label for="contact-message" class="form-label">Message</label>
+                                <textarea class="form-control" id="contact-message" rows="5" placeholder="Write your message here..."></textarea>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">Send Message</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="contact-cta">
+    <div class="container">
+        <div class="contact-cta__panel">
+            <div>
+                <p class="contact-kicker contact-kicker--light">Let’s build</p>
+                <h2>Looking for a developer with a systems mindset?</h2>
+            </div>
+            <a href="{% url 'articles' %}" class="btn btn-primary">Explore articles</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
