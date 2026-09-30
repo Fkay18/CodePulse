@@ -1,0 +1,40 @@
+{% extends "blog/base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="delete-article-container">
+        <div class="delete-article-card">
+
+            <div class="delete-article-icon">
+                ⚠
+            </div>
+
+            <h1>Delete Article</h1>
+
+            <p>
+                Are you sure you want to delete
+                <strong>{{ article.title }}</strong>?
+            </p>
+
+            <p class="delete-warning">
+                This action cannot be undone.
+            </p>
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="delete-actions">
+                    <a href="{% url 'manage_articles' %}" class="cancel-delete-btn">
+                        Cancel
+                    </a>
+
+                    <button type="submit" class="confirm-delete-btn">
+                        Yes, Delete
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

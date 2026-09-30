@@ -1,0 +1,30 @@
+{% extends "blog/base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="auth-container">
+        <section class="auth-card" aria-labelledby="signup-heading">
+            <div class="auth-header">
+                <span class="section-label">CodePulse</span>
+                <h1 id="signup-heading">Sign up</h1>
+                <p>Sign up to join the CodePulse community.</p>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="form-group">
+                        {{ field.label_tag }}
+                        {{ field }}
+                        {% if field.help_text %}<small class="auth-help">{{ field.help_text|safe }}</small>{% endif %}
+                        {% if field.errors %}<div class="auth-error">{{ field.errors }}</div>{% endif %}
+                    </div>
+                {% endfor %}
+                <button class="auth-submit-btn" type="submit">Create account</button>
+            </form>
+
+            <a class="auth-link" href="{% url 'login' %}">Already have an account? Log in</a>
+        </section>
+    </div>
+</div>
+{% endblock %}

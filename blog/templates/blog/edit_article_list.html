@@ -1,0 +1,45 @@
+{% extends "blog/base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="article-selection-container">
+        <div class="article-selection-header">
+            <h1>Edit Article</h1>
+            <p>Select the article you want to edit.</p>
+        </div>
+
+        {% for unit in units %}
+            <div class="article-unit-card">
+                <div class="article-unit-header">
+                    <h2>{{ unit.name }}</h2>
+                </div>
+
+                <div class="article-unit-body">
+                    <div class="row g-3">
+                        {% for article in unit.articles.all %}
+                            <div class="col-md-6">
+                                <div class="article-action-card">
+                                    <div>
+                                        <h4>{{ article.title }}</h4>
+                                        <p>{{ article.content|truncatewords:12 }}</p>
+                                    </div>
+
+                                    <a href="{% url 'edit_article' article.slug %}" class="edit-action-btn">
+                                        Edit
+                                    </a>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <div class="col-12">
+                                <p class="no-articles-message">No articles available in this unit.</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p class="no-articles-message">No articles found.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

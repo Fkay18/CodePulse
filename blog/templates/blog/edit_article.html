@@ -1,0 +1,26 @@
+{% extends "blog/base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="edit-blog-container">
+        <div class="edit-article-card">
+
+            <div class="edit-article-header">
+                <h1>Edit Article</h1>
+                <p>Update the details of this CodePulse article.</p>
+            </div>
+
+            <form method="POST" enctype="multipart/form-data" class="edit-article-form">
+                {% csrf_token %}
+
+                {{ form.as_p }}
+
+                <button type="submit" class="update-article-btn">
+                    Update Article
+                </button>
+            </form>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "blog/base.html" %}
+
+{% block content %}
+
+<div class="container">
+    <div class="auth-container">
+
+        <div class="auth-card">
+
+            <div class="auth-header">
+                <span class="section-label">CodePulse</span>
+
+                <h1>Welcome</h1>
+
+                <p>
+                    Log in to manage your CodePulse articles.
+                </p>
+            </div>
+
+            {% if form.errors %}
+                <div class="auth-error">
+                    Your username and password did not match.
+                    Please try again.
+                </div>
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    {{ form.username.label_tag }}
+                    {{ form.username }}
+                </div>
+
+                <div class="form-group">
+                    {{ form.password.label_tag }}
+                    {{ form.password }}
+                </div>
+
+                {% if next %}
+                    <input type="hidden" name="next" value="{{ next }}">
+                {% endif %}
+
+                <button type="submit" class="auth-submit-btn">
+                    Login
+                </button>
+
+            </form>
+
+            <div class="auth-links">
+                <a class="auth-link" href="{% url 'password_reset' %}">Forgot password?</a>
+                <a class="auth-link auth-link--right" href="{% url 'client_signup' %}">Sign up</a>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

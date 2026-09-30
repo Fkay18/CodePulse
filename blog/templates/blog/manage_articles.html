@@ -1,0 +1,45 @@
+{% extends "blog/base.html" %}
+
+{% block content %}
+
+<div class="manage-articles-container">
+
+<div class="manage-articles-header">
+    <h1>Manage Articles</h1>
+    <p>Add, update or remove blog articles.</p>
+</div>
+
+<div class="manage-articles-grid">
+
+   
+        {% if perms.blog.add_blog %}
+            <a href="{% url 'add_articles' %}" class="manage-article-card">
+                <div class="manage-article-icon">+</div>
+                <h3>Add Article</h3>
+                <p>Add a new blog article.</p>
+            </a>
+        {% endif %}
+   
+        {% if perms.blog.change_blog %}
+            <a href="{% url 'edit_article_list' %}" class="manage-article-card">
+                <div class="manage-article-icon">✎</div>
+                <h3>Edit Article</h3>
+                <p>Update an existing blog article.</p>
+            </a>
+        {% endif %}
+    
+        {% if perms.blog.delete_blog %}
+            <a href="{% url 'delete_article_list' %}" class="manage-article-card">
+                <div class="manage-article-icon">×</div>
+                <h3>Delete Article</h3>
+                <p>Remove an existing blog article.</p>
+            </a>
+        {% endif %}
+
+</div>
+
+</div>
+
+{% endblock %}
+
+

@@ -58,23 +58,23 @@
             <div class="col-lg-7">
                 <div class="contact-form-card">
                     <h3>Send a message</h3>
-                    <form>
+                    <form id="contact-form">
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label for="contact-name" class="form-label">Full Name</label>
-                                <input type="text" class="form-control" id="contact-name" placeholder="Your full name">
+                                <input type="text" class="form-control" id="contact-name" placeholder="Your full name" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="contact-email" class="form-label">Email Address</label>
-                                <input type="email" class="form-control" id="contact-email" placeholder="you@example.com">
+                                <input type="email" class="form-control" id="contact-email" placeholder="you@example.com" required>
                             </div>
                             <div class="col-12">
                                 <label for="contact-subject" class="form-label">Subject</label>
-                                <input type="text" class="form-control" id="contact-subject" placeholder="What would you like to discuss?">
+                                <input type="text" class="form-control" id="contact-subject" placeholder="What would you like to discuss?" required>
                             </div>
                             <div class="col-12">
                                 <label for="contact-message" class="form-label">Message</label>
-                                <textarea class="form-control" id="contact-message" rows="5" placeholder="Write your message here..."></textarea>
+                                <textarea class="form-control" id="contact-message" rows="5" placeholder="Write your message here..." required></textarea>
                             </div>
                             <div class="col-12">
                                 <button type="submit" class="btn btn-primary">Send Message</button>
@@ -98,4 +98,18 @@
         </div>
     </div>
 </section>
+<script>
+    document.getElementById('contact-form').addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const name = document.getElementById('contact-name').value.trim();
+        const email = document.getElementById('contact-email').value.trim();
+        const subject = document.getElementById('contact-subject').value.trim();
+        const message = document.getElementById('contact-message').value.trim();
+        const text = `Hello, my name is ${name}.\nEmail: ${email}\nSubject: ${subject}\nMessage: ${message}`;
+        const whatsappUrl = `https://wa.me/2348142582903?text=${encodeURIComponent(text)}`;
+
+        window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+    });
+</script>
 {% endblock %}
