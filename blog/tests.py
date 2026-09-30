@@ -170,6 +170,52 @@ class BlogApiAuthenticationTests(TestCase):
         response = self.client.get(self.blog_list_url)
 
         self.assertEqual(response.status_code, 200)
+        self.assertIn('results', response.data)
+
+    def test_api_schema_and_docs_are_available(self):
+        schema_response = self.client.get(reverse('api_schema'))
+        docs_response = self.client.get(reverse('api_docs'))
+
+        self.assertEqual(schema_response.status_code, 200)
+        self.assertIn(b'CodePulse API', schema_response.content)
+        self.assertEqual(docs_response.status_code, 200)
+
+    def test_anonymous_users_cannot_write_to_the_api(self):
+        response = self.client.post(
+            self.blog_list_url,
+            {'title': 'Unauthorized'},
+            format='json',
+        )
+
+        self.assertIn(response.status_code, (401, 403))
+
+    def test_invalid_jwt_is_rejected(self):
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer invalid-token')
+
+        response = self.client.get(self.blog_list_url)
+
+        self.assertIn(response.status_code, (401, 403))
+
+    def test_search_and_ordering_filter_blog_results(self):
+        blog, _ = self.create_blog()
+        Blog.objects.create(
+            unit=blog.unit,
+            title='Searchable API article',
+            slug='searchable-api-article',
+            content='A searchable article.',
+            image_url='articles/searchable.jpg',
+            author='Another Author',
+        )
+
+        search_response = self.client.get(self.blog_list_url, {'search': 'Searchable'})
+        self.assertEqual(search_response.status_code, 200)
+        self.assertEqual(search_response.data['count'], 1)
+        self.assertEqual(search_response.data['results'][0]['title'], 'Searchable API article')
+
+        ordering_response = self.client.get(self.blog_list_url, {'ordering': 'title'})
+        self.assertEqual(ordering_response.status_code, 200)
+        titles = [result['title'] for result in ordering_response.data['results']]
+        self.assertEqual(titles, sorted(titles))
 
     def test_session_auth_requires_add_permission_for_writes(self):
         self.assertTrue(self.client.login(username='api-client', password='API-client-password!927'))
@@ -233,6 +279,13 @@ class BlogApiAuthenticationTests(TestCase):
         self.assertEqual(response.status_code, 200)
         blog.refresh_from_db()
         self.assertEqual(blog.title, 'Updated through the API')
+
+        invalid_response = self.client.patch(
+            detail_url,
+            {'title': ''},
+            format='json',
+        )
+        self.assertEqual(invalid_response.status_code, 400)
 
     def test_jwt_auth_can_delete_with_delete_permission(self):
         blog, detail_url = self.create_blog()
