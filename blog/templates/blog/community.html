@@ -1,0 +1,74 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+<section class="community-page">
+    <header class="community-header">
+        <div>
+            <span class="section-label">CodePulse community</span>
+            <h1>Meet the people building things.</h1>
+            <p>Find developers, explore their profiles, and follow the work they share.</p>
+        </div>
+        <form class="community-search" method="get" action="{% url 'community' %}" role="search">
+            <label class="visually-hidden" for="member-search">Search community</label>
+            <input class="form-control" id="member-search" name="q" type="search"
+                   placeholder="Search people or bios" value="{{ query }}">
+            <button class="btn btn-primary" type="submit">Search</button>
+        </form>
+    </header>
+
+    <div class="community-results-heading">
+        <h2>Community members</h2>
+        <span>{{ page_obj.paginator.count }} member{{ page_obj.paginator.count|pluralize }}</span>
+    </div>
+
+    <div class="community-grid">
+        {% for profile in page_obj %}
+            <article class="member-card">
+                <a class="member-card__avatar" href="{% url 'member_profile' profile.user.username %}"
+                   aria-label="View {{ profile.display_name|default:profile.user.username }}'s profile">
+                    {% if profile.profile_picture %}
+                        <img src="{{ profile.profile_picture.url }}" alt="">
+                    {% else %}
+                        <span>{{ profile.display_name|default:profile.user.username|first|upper }}</span>
+                    {% endif %}
+                </a>
+                <div class="member-card__details">
+                    <h3><a href="{% url 'member_profile' profile.user.username %}">{{ profile.display_name|default:profile.user.get_full_name|default:profile.user.username }}</a></h3>
+                    <p class="member-card__username">@{{ profile.user.username }}</p>
+                    <p class="member-card__bio">{{ profile.bio|default:'CodePulse member'|truncatechars:100 }}</p>
+                    <p class="member-card__count">{{ profile.followers_count }} follower{{ profile.followers_count|pluralize }}</p>
+                </div>
+                <div class="member-card__actions">
+                    <a class="member-card__view" href="{% url 'member_profile' profile.user.username %}">View profile</a>
+                    {% if request.user.is_authenticated %}
+                        {% if profile.user_id == request.user.id %}
+                            <a class="member-card__follow member-card__follow--self" href="{% url 'profile' %}">Your profile</a>
+                        {% else %}
+                            <form method="post" action="{% url 'toggle_follow' profile.user.username %}">
+                                {% csrf_token %}
+                                <button class="member-card__follow{% if profile.user_id in following_ids %} is-following{% endif %}" type="submit">
+                                    {% if profile.user_id in following_ids %}Following{% else %}Follow{% endif %}
+                                </button>
+                            </form>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </article>
+        {% empty %}
+            <p class="community-empty">No members match that search.</p>
+        {% endfor %}
+    </div>
+
+    {% if page_obj.has_other_pages %}
+        <nav class="community-pagination" aria-label="Community pages">
+            {% if page_obj.has_previous %}
+                <a href="?q={{ query|urlencode }}&page={{ page_obj.previous_page_number }}">Previous</a>
+            {% endif %}
+            <span>Showing {{ page_obj.start_index }}–{{ page_obj.end_index }} of {{ page_obj.paginator.count }} · Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+                <a href="?q={{ query|urlencode }}&page={{ page_obj.next_page_number }}">Next</a>
+            {% endif %}
+        </nav>
+    {% endif %}
+</section>
+{% endblock %}

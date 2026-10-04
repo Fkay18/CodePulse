@@ -9,15 +9,18 @@
                 <h1 class="about-hero__title">Learning in public, one article at a time.</h1>
                 <p class="about-hero__lead">
                     CodePulse is a place for practical lessons on Python, Django, backend systems,
-                    and the kind of problem-solving that makes software development feel real.
+                    and the kind of problem-solving that makes software development feel real. It is
+                    also a place to meet fellow learners and developers as you grow.
                 </p>
                 <p class="about-hero__text">
                     It is built around the idea that great engineering usually starts with curiosity,
                     careful thinking, and a willingness to learn out loud. This blog captures that
-                    process: the experiments, the breakdowns, the fixes, and the wins.
+                    process: the experiments, the breakdowns, the fixes, and the wins. Members can
+                    also showcase projects with their technologies, GitHub repositories, and live demos.
                 </p>
                 <div class="about-hero__actions">
-                    <a class="btn btn-primary" href="{% url 'home' %}#articles">Read the articles</a>
+                    <a class="btn btn-primary" href="{% url 'articles' %}">Read the articles</a>
+                    <a class="btn btn-outline-primary" href="{% url 'community' %}">Meet the community</a>
                     <a class="btn btn-outline-primary" href="{% url 'contact' %}">Get in touch</a>
                 </div>
             </div>
@@ -29,7 +32,8 @@
                         <li>Python and Django notes</li>
                         <li>Backend architecture ideas</li>
                         <li>Real-world debugging lessons</li>
-                        <li>Systems thinking and iteration</li>
+                        <li>Meet learners and developers</li>
+                        <li>Showcase projects, GitHub, and demos</li>
                     </ul>
                 </div>
             </div>
@@ -55,6 +59,10 @@
                     Whether it is an API design decision, a database issue, or a Django pattern,
                     each article is meant to help the reader build with more confidence.
                 </p>
+                <p class="about-story__text">
+                    CodePulse also helps new learners meet other developers, discover what people are
+                    building, and share their own projects through GitHub and live-demo links.
+                </p>
             </div>
         </div>
     </div>
@@ -79,16 +87,16 @@
             <div class="col-md-4">
                 <article class="value-card h-100">
                     <div class="value-card__icon">⚙️</div>
-                    <h3>Build clearly</h3>
-                    <p>Focus on systems, structure, and maintainable decisions that scale.</p>
+                    <h3>Meet your community</h3>
+                    <p>Connect with fellow beginners and developers who are learning, sharing, and building.</p>
                 </article>
             </div>
 
             <div class="col-md-4">
                 <article class="value-card h-100">
                     <div class="value-card__icon">🚀</div>
-                    <h3>Ship with confidence</h3>
-                    <p>Turn learning into action and use practical thinking to improve delivery.</p>
+                    <h3>Show what you build</h3>
+                    <p>Give your projects a home with their technologies, GitHub repository, and live demo.</p>
                 </article>
             </div>
         </div>
@@ -100,9 +108,12 @@
         <div class="about-cta__panel">
             <div>
                 <p class="about-kicker about-kicker--light">Keep exploring</p>
-                <h2>Read the latest work from CodePulse.</h2>
+                <h2>Learn, connect, and share what you build.</h2>
             </div>
-            <a href="{% url 'home' %}#articles" class="btn btn-primary">Explore articles</a>
+            <div class="about-cta__actions">
+                <a href="{% url 'articles' %}" class="btn btn-primary">Explore articles</a>
+                <a href="{% url 'community' %}" class="btn btn-outline-light">Meet the community</a>
+            </div>
         </div>
     </div>
 </section>

@@ -1,0 +1,91 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+<section class="member-profile-page">
+    <a class="member-profile__back" href="{% url 'community' %}">← Community</a>
+    <article class="member-profile-card">
+        <div class="member-profile-card__identity">
+            <div class="member-profile-card__avatar">
+                {% if profile.profile_picture %}
+                    <img src="{{ profile.profile_picture.url }}" alt="{{ profile.display_name|default:member.username }}'s profile photo">
+                {% else %}
+                    <span>{{ profile.display_name|default:member.username|first|upper }}</span>
+                {% endif %}
+            </div>
+            <div class="member-profile-card__name">
+                <span class="section-label">CodePulse member</span>
+                <h1>{{ profile.display_name|default:member.get_full_name|default:member.username }}</h1>
+                <p>@{{ member.username }}</p>
+            </div>
+            <div class="member-profile-card__actions">
+                {% if request.user.is_authenticated %}
+                    {% if request.user.id == member.id %}
+                        <a class="btn btn-outline-primary" href="{% url 'profile' %}">Edit profile</a>
+                    {% else %}
+                        <form method="post" action="{% url 'toggle_follow' member.username %}">
+                            {% csrf_token %}
+                            <button class="btn {% if is_following %}btn-outline-primary{% else %}btn-primary{% endif %}" type="submit">
+                                {% if is_following %}Following · Unfollow{% else %}Follow{% endif %}
+                            </button>
+                        </form>
+                    {% endif %}
+                {% else %}
+                    <a class="btn btn-primary" href="{% url 'login' %}?next={{ request.path|urlencode }}">Log in to follow</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="member-profile-card__stats" aria-label="Follow counts">
+            <a href="{% url 'member_followers' member.username %}"><strong>{{ followers_count }}</strong> follower{{ followers_count|pluralize }}</a>
+            <a href="{% url 'member_following' member.username %}"><strong>{{ following_count }}</strong> following</a>
+        </div>
+
+        <div class="member-profile-card__body">
+            <section aria-labelledby="member-bio-heading">
+                <h2 id="member-bio-heading">About</h2>
+                {% if profile.bio %}
+                    <p class="member-profile-card__bio">{{ profile.bio|linebreaksbr }}</p>
+                {% else %}
+                    <p class="member-profile-card__muted">This member hasn’t added a bio yet.</p>
+                {% endif %}
+            </section>
+
+            <section aria-labelledby="member-links-heading">
+                <h2 id="member-links-heading">Around the web</h2>
+                <div class="member-profile-card__links">
+                    {% if profile.show_email and member.email %}<a href="mailto:{{ member.email }}">{{ member.email }}</a>{% endif %}
+                    {% if profile.instagram_url %}<a href="{{ profile.instagram_url }}" target="_blank" rel="noopener noreferrer">Instagram <span aria-hidden="true">↗</span></a>{% endif %}
+                    {% if profile.linkedin_url %}<a href="{{ profile.linkedin_url }}" target="_blank" rel="noopener noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>{% endif %}
+                    {% if profile.x_url %}<a href="{{ profile.x_url }}" target="_blank" rel="noopener noreferrer">X <span aria-hidden="true">↗</span></a>{% endif %}
+                    {% if not profile.show_email and not profile.instagram_url and not profile.linkedin_url and not profile.x_url %}
+                        <p class="member-profile-card__muted">No public links have been added.</p>
+                    {% endif %}
+                </div>
+            </section>
+        </div>
+
+        <section class="member-projects" aria-labelledby="member-projects-heading">
+            <div class="member-projects__heading">
+                <div><span>DEVELOPER SHOWCASE</span><h2 id="member-projects-heading">Projects</h2></div>
+                <span>{{ projects|length }} project{{ projects|length|pluralize }}</span>
+            </div>
+            {% for project in projects %}
+                <article class="showcase-project{% if not project.image %} showcase-project--text-only{% endif %}">
+                    {% if project.image %}<img class="showcase-project__image" src="{{ project.image.url }}" alt="{{ project.name }} project">{% endif %}
+                    <div class="showcase-project__content">
+                        <h3>{{ project.name }}</h3>
+                        <p>{{ project.description|linebreaksbr }}</p>
+                        <span class="showcase-project__technologies">{{ project.technologies }}</span>
+                        <div class="showcase-project__links">
+                            {% if project.github_url %}<a href="{{ project.github_url }}" target="_blank" rel="noopener noreferrer">GitHub ↗</a>{% endif %}
+                            {% if project.live_url %}<a href="{{ project.live_url }}" target="_blank" rel="noopener noreferrer">Live demo ↗</a>{% endif %}
+                        </div>
+                    </div>
+                </article>
+            {% empty %}
+                <p class="member-profile-card__muted">No projects shared yet.</p>
+            {% endfor %}
+        </section>
+    </article>
+</section>
+{% endblock %}

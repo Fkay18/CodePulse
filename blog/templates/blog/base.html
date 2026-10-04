@@ -7,12 +7,23 @@
     <title>CodePulse</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'blog/css/style.css' %}?v=4">
+    <script>
+        (() => {
+            const savedTheme = localStorage.getItem('codepulse-theme');
+            const theme = savedTheme || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.dataset.theme = theme;
+            document.documentElement.dataset.bsTheme = theme;
+        })();
+    </script>
+    <link rel="stylesheet" href="{% static 'blog/css/style.css' %}?v=11">
 </head>
 <body>
 <nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm">
     <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'home' %}">CodePulse</a>
+        <a class="navbar-brand codepulse-brand" href="{% url 'home' %}" aria-label="CodePulse home">
+            <span class="codepulse-brand__mark" aria-hidden="true"><span>&lt;</span><span>/</span><span>&gt;</span></span>
+            <span>CodePulse</span>
+        </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -31,24 +42,38 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'contact' %}">Contact</a>
                 </li>
+                {% if request.user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'community' %}">Community</a>
+                    </li>
+                {% endif %}
                 {% if perms.blog.view_blog %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'manage_articles' %}">Manage Articles</a>
                     </li>
                 {% endif %}
-                {% if request.user.is_authenticated %}
-                    <li class="nav-item">
-                        <form method="post" action="{% url 'logout' %}">
-                            {% csrf_token %}
-                            <button class="nav-link border-0 bg-transparent" type="submit">Logout</button>
-                        </form>
-                    </li>
-                {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">Login</a>
-                    </li>
-                {% endif %}
             </ul>
+            <div class="nav-account-actions">
+                {% if request.user.is_authenticated %}
+                    <a class="nav-link" href="{% url 'profile' %}">Profile</a>
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button class="nav-link border-0 bg-transparent" type="submit">Logout</button>
+                    </form>
+                {% else %}
+                    <a class="nav-link" href="{% url 'login' %}">Login</a>
+                {% endif %}
+            </div>
+            <button class="btn btn-outline-primary theme-toggle theme-toggle--icon" type="button" data-theme-toggle
+                    aria-label="Switch to dark mode" title="Switch to dark mode">
+                <svg class="theme-toggle__icon" data-theme-icon="sun" viewBox="0 0 24 24" fill="none" aria-hidden="true" hidden>
+                    <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.7" />
+                    <path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+                </svg>
+                <svg class="theme-toggle__icon" data-theme-icon="moon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M20.2 15.4A8.6 8.6 0 0 1 8.6 3.8 8.7 8.7 0 1 0 20.2 15.4Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </button>
             <form class="d-flex" role="search" method="get" action="{% url 'search_articles' %}">
                 <label class="visually-hidden" for="site-search">Search articles</label>
                 <input class="form-control me-2" id="site-search" name="q" type="search"
@@ -78,6 +103,9 @@
                 <nav class="site-footer__nav" aria-label="Footer navigation">
                     <a href="{% url 'home' %}">Home</a>
                     <a href="{% url 'home' %}#articles">Articles</a>
+                    {% if request.user.is_authenticated %}
+                        <a href="{% url 'community' %}">Community</a>
+                    {% endif %}
                     <a href="{% url 'about' %}">About</a>
                     <a href="{% url 'contact' %}">Contact</a>
                 </nav>
@@ -89,6 +117,20 @@
                     <a href="{% url 'contact' %}">Contact</a>
                     <a href="tel:08142582903">08142582903</a>
                     <a href="https://www.linkedin.com/in/fikayomi-akinrimisi" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                    <a class="site-footer__social-link" href="https://www.instagram.com/Fkay_18/" target="_blank" rel="noopener noreferrer">
+                        <svg class="site-footer__social-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <rect x="3.2" y="3.2" width="17.6" height="17.6" rx="5" stroke="currentColor" stroke-width="1.8" />
+                            <circle cx="12" cy="12" r="4.1" stroke="currentColor" stroke-width="1.8" />
+                            <circle cx="17.8" cy="6.5" r="1.1" fill="currentColor" />
+                        </svg>
+                         @Fkay_18
+                    </a>
+                    <a class="site-footer__social-link" href="https://x.com/Fikky04" target="_blank" rel="noopener noreferrer">
+                        <svg class="site-footer__social-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path d="M18.9 2H22l-6.77 7.74L23.2 22h-6.26l-4.9-7.44L5.53 22H2.4l7.24-8.28L1.8 2h6.42l4.43 6.77L18.9 2Zm-1.1 18h1.73L7.27 3.89H5.41L17.8 20Z" />
+                        </svg>
+                         @Fikky04
+                    </a>
                 </nav>
             </div>
         </div>
@@ -103,5 +145,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
+<script src="{% static 'blog/js/theme.js' %}?v=2" defer></script>
+{% block page_scripts %}{% endblock %}
 </body>
 </html>

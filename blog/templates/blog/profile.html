@@ -1,0 +1,227 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="profile-page">
+    <header class="profile-page__header">
+        <div>
+            <span class="section-label">Your CodePulse account</span>
+            <h1 id="profile-heading">Your profile</h1>
+            <p>Make this space yours and choose what you would like to hear from us.</p>
+        </div>
+        <span class="profile-page__handle">@{{ request.user.username }}</span>
+    </header>
+
+    <div class="profile-layout">
+        <aside class="profile-summary" aria-label="Profile preview">
+            <div class="profile-summary__topline">
+                <span>PROFILE PREVIEW</span>
+                <span class="profile-summary__status">YOUR ACCOUNT</span>
+            </div>
+            <div class="profile-avatar" data-profile-avatar>
+                {% if profile.profile_picture %}
+                    <img src="{{ profile.profile_picture.url }}" alt="Profile photo" data-profile-avatar-image>
+                {% else %}
+                    <span data-profile-avatar-fallback>{{ profile.display_name|default:request.user.username|first|upper }}</span>
+                    <img alt="" data-profile-avatar-image hidden>
+                {% endif %}
+            </div>
+            <h2 data-profile-name data-fallback-name="{{ request.user.get_full_name|default:request.user.username }}">{{ profile.display_name|default:request.user.get_full_name|default:request.user.username }}</h2>
+            <p class="profile-summary__username">@{{ request.user.username }}</p>
+            <p class="profile-summary__bio" data-profile-bio>{{ profile.bio|default:'Your biography will appear here.' }}</p>
+
+            <div class="profile-summary__links" aria-label="Social and contact links">
+                {% if request.user.email %}<a class="profile-summary__email" href="mailto:{{ request.user.email }}">{{ request.user.email }}</a>{% endif %}
+                {% if profile.instagram_url %}<a href="{{ profile.instagram_url }}" target="_blank" rel="noopener noreferrer">Instagram <span aria-hidden="true">↗</span></a>{% endif %}
+                {% if profile.linkedin_url %}<a href="{{ profile.linkedin_url }}" target="_blank" rel="noopener noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>{% endif %}
+                {% if profile.x_url %}<a href="{{ profile.x_url }}" target="_blank" rel="noopener noreferrer">X <span aria-hidden="true">↗</span></a>{% endif %}
+            </div>
+            {% if profile.phone_number %}<p class="profile-summary__phone">{{ profile.phone_number }}</p>{% endif %}
+            <div class="profile-summary__connections">
+                <a href="{% url 'member_followers' request.user.username %}"><strong>{{ request.user.follower_relationships.count }}</strong> followers</a>
+                <a href="{% url 'member_following' request.user.username %}"><strong>{{ request.user.following_relationships.count }}</strong> following</a>
+            </div>
+        </aside>
+
+        <form method="post" enctype="multipart/form-data" class="profile-editor">
+            {% csrf_token %}
+            <section class="profile-editor__section" aria-labelledby="identity-heading">
+                <div class="profile-editor__heading">
+                    <div><span>IDENTITY</span><h2 id="identity-heading">The essentials</h2></div>
+                    <p>Tell the CodePulse community a little about you.</p>
+                </div>
+
+                <div class="profile-photo-control">
+                    <div class="profile-photo-control__preview" data-profile-avatar-small>
+                        {% if profile.profile_picture %}
+                            <img src="{{ profile.profile_picture.url }}" alt="" data-profile-avatar-small-image>
+                        {% else %}
+                            <span data-profile-avatar-small-fallback>{{ profile.display_name|default:request.user.username|first|upper }}</span>
+                            <img alt="" data-profile-avatar-small-image hidden>
+                        {% endif %}
+                    </div>
+                    <div class="profile-photo-control__field">
+                        {{ form.profile_picture.label_tag }}
+                        {{ form.profile_picture }}
+                        <small>Square images work best. Maximum file size: 5 MB.</small>
+                        {% if form.profile_picture.errors %}<div class="auth-error">{{ form.profile_picture.errors }}</div>{% endif %}
+                    </div>
+                </div>
+
+                <div class="profile-fields-grid">
+                    <div class="profile-field profile-field--wide">
+                        {{ form.display_name.label_tag }}{{ form.display_name }}
+                        {% if form.display_name.errors %}<div class="auth-error">{{ form.display_name.errors }}</div>{% endif %}
+                    </div>
+                    <div class="profile-field profile-field--wide">
+                        {{ form.bio.label_tag }}{{ form.bio }}
+                        {% if form.bio.errors %}<div class="auth-error">{{ form.bio.errors }}</div>{% endif %}
+                    </div>
+                </div>
+            </section>
+
+            <section class="profile-editor__section" aria-labelledby="contact-heading">
+                <div class="profile-editor__heading">
+                    <div><span>CONTACT</span><h2 id="contact-heading">Stay connected</h2></div>
+                    <p>Your phone number is only shown in your private profile.</p>
+                </div>
+                <div class="profile-field">
+                    {{ form.phone_number.label_tag }}{{ form.phone_number }}
+                    {% if form.phone_number.errors %}<div class="auth-error">{{ form.phone_number.errors }}</div>{% endif %}
+                </div>
+                <div class="profile-field profile-field--email">
+                    {{ form.email.label_tag }}{{ form.email }}
+                    {% if form.email.errors %}<div class="auth-error">{{ form.email.errors }}</div>{% endif %}
+                </div>
+                <div class="profile-newsletter profile-email-visibility">
+                    {{ form.show_email }}
+                    {{ form.show_email.label_tag }}
+                    {% if form.show_email.errors %}<div class="auth-error">{{ form.show_email.errors }}</div>{% endif %}
+                </div>
+            </section>
+
+            <section class="profile-editor__section" aria-labelledby="links-heading">
+                <div class="profile-editor__heading">
+                    <div><span>ELSEWHERE</span><h2 id="links-heading">Your links</h2></div>
+                    <p>Add only the places you want to share.</p>
+                </div>
+                <div class="profile-fields-grid">
+                    {% for field in form %}
+                        {% if field.name == 'instagram_url' or field.name == 'linkedin_url' or field.name == 'x_url' %}
+                            <div class="profile-field">
+                                {{ field.label_tag }}{{ field }}
+                                {% if field.errors %}<div class="auth-error">{{ field.errors }}</div>{% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section class="profile-editor__section" aria-labelledby="appearance-heading">
+                <div class="profile-editor__heading">
+                    <div><span>APPEARANCE</span><h2 id="appearance-heading">Color theme</h2></div>
+                    <p>Choose light or dark mode for CodePulse.</p>
+                </div>
+                <div class="profile-theme-picker" role="group" aria-label="Color theme">
+                    <button type="button" class="profile-theme-picker__option" data-theme-choice="light" aria-pressed="false">
+                        <span class="profile-theme-picker__swatch profile-theme-picker__swatch--light" aria-hidden="true"></span>
+                        Light
+                    </button>
+                    <button type="button" class="profile-theme-picker__option" data-theme-choice="dark" aria-pressed="false">
+                        <span class="profile-theme-picker__swatch profile-theme-picker__swatch--dark" aria-hidden="true"></span>
+                        Dark
+                    </button>
+                </div>
+            </section>
+
+            <section class="profile-editor__section profile-editor__section--last" aria-labelledby="updates-heading">
+                <div class="profile-editor__heading">
+                    <div><span>UPDATES</span><h2 id="updates-heading">CodePulse news</h2></div>
+                    <p>You can change this preference any time.</p>
+                </div>
+                <div class="profile-newsletter">
+                    {{ form.receive_newsletter }}
+                    {{ form.receive_newsletter.label_tag }}
+                    {% if form.receive_newsletter.errors %}<div class="auth-error">{{ form.receive_newsletter.errors }}</div>{% endif %}
+                </div>
+            </section>
+
+            <div class="profile-editor__actions">
+                <span>Changes are saved to your account.</span>
+                <button class="auth-submit-btn" type="submit">Save profile</button>
+            </div>
+        </form>
+    </div>
+
+    <section class="profile-projects-editor" id="projects" aria-labelledby="projects-heading">
+        <div class="profile-projects-editor__header">
+            <div>
+                <span class="profile-editor__eyebrow">DEVELOPER SHOWCASE</span>
+                <h2 id="projects-heading">My projects</h2>
+                <p>Share up to five projects you’re proud of.</p>
+            </div>
+            <span>{{ projects|length }} / 5 projects</span>
+        </div>
+
+        {% if projects %}
+            <div class="profile-project-list">
+                {% for project in projects %}
+                    <article class="profile-project-item">
+                        <div>
+                            <h3>{{ project.name }}</h3>
+                            <p>{{ project.description|truncatechars:180 }}</p>
+                            <span>{{ project.technologies }}</span>
+                        </div>
+                        <form method="post" action="{% url 'remove_project' project.id %}">
+                            {% csrf_token %}
+                            <button class="profile-project-item__remove" type="submit">Remove</button>
+                        </form>
+                    </article>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if projects|length >= 5 %}
+            <p class="project-limit-note">You’ve reached the five-project showcase limit. Remove a project to add another.</p>
+        {% else %}
+            <form class="project-form" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add_project">
+                <h3>Add a project</h3>
+                {% if project_form.non_field_errors %}<div class="auth-error">{{ project_form.non_field_errors }}</div>{% endif %}
+                <div class="project-form__grid">
+                    <div class="profile-field">
+                        {{ project_form.name.label_tag }}{{ project_form.name }}
+                        {% if project_form.name.errors %}<div class="auth-error">{{ project_form.name.errors }}</div>{% endif %}
+                    </div>
+                    <div class="profile-field">
+                        {{ project_form.technologies.label_tag }}{{ project_form.technologies }}
+                        {% if project_form.technologies.errors %}<div class="auth-error">{{ project_form.technologies.errors }}</div>{% endif %}
+                    </div>
+                    <div class="profile-field profile-field--wide">
+                        {{ project_form.description.label_tag }}{{ project_form.description }}
+                        {% if project_form.description.errors %}<div class="auth-error">{{ project_form.description.errors }}</div>{% endif %}
+                    </div>
+                    <div class="profile-field">
+                        {{ project_form.github_url.label_tag }}{{ project_form.github_url }}
+                        {% if project_form.github_url.errors %}<div class="auth-error">{{ project_form.github_url.errors }}</div>{% endif %}
+                    </div>
+                    <div class="profile-field">
+                        {{ project_form.live_url.label_tag }}{{ project_form.live_url }}
+                        {% if project_form.live_url.errors %}<div class="auth-error">{{ project_form.live_url.errors }}</div>{% endif %}
+                    </div>
+                    <div class="profile-field profile-field--wide">
+                        {{ project_form.image.label_tag }}{{ project_form.image }}
+                        {% if project_form.image.errors %}<div class="auth-error">{{ project_form.image.errors }}</div>{% endif %}
+                    </div>
+                </div>
+                <button class="auth-submit-btn" type="submit">Add project</button>
+            </form>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}
+
+{% block page_scripts %}
+<script src="{% static 'blog/js/profile.js' %}?v=2" defer></script>
+{% endblock %}
