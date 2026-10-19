@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 from datetime import timedelta
 
+import dj_database_url
 from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 
@@ -143,16 +144,28 @@ WSGI_APPLICATION = 'codepulse.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('MYSQL_DATABASE') or os.environ.get('MYSQLDATABASE', 'codepulse'),
-        'USER': os.environ.get('MYSQL_USER') or os.environ.get('MYSQLUSER', 'root'),
-        'PASSWORD': os.environ.get('MYSQL_PASSWORD') or os.environ.get('MYSQLPASSWORD', ''),
-        'HOST': os.environ.get('MYSQL_HOST') or os.environ.get('MYSQLHOST', '127.0.0.1'),
-        'PORT': os.environ.get('MYSQL_PORT') or os.environ.get('MYSQLPORT', '3306'),
+DATABASE_URL = os.environ.get('DATABASE_URL', '').strip()
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600),
     }
-}
+    if DATABASES['default']['ENGINE'] != 'django.db.backends.postgresql':
+        raise ImproperlyConfigured('DATABASE_URL must use PostgreSQL in production.')
+elif DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.environ.get('MYSQL_DATABASE') or os.environ.get('MYSQLDATABASE', 'codepulse'),
+            'USER': os.environ.get('MYSQL_USER') or os.environ.get('MYSQLUSER', 'root'),
+            'PASSWORD': os.environ.get('MYSQL_PASSWORD') or os.environ.get('MYSQLPASSWORD', ''),
+            'HOST': os.environ.get('MYSQL_HOST') or os.environ.get('MYSQLHOST', '127.0.0.1'),
+            'PORT': os.environ.get('MYSQL_PORT') or os.environ.get('MYSQLPORT', '3306'),
+        }
+    }
+else:
+    raise ImproperlyConfigured(
+        'DATABASE_URL must be set to the Railway PostgreSQL connection URL in production.'
+    )
 
 
 # Password validation
